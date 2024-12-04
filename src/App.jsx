@@ -14,7 +14,10 @@ const App = () => {
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
-
+  if (!chartData) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <div style={{ textAlign: 'center' }}>
       <h1>Dynamic Charts with React and Chart.js</h1>
