@@ -1,33 +1,48 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import Chart from 'chart.js/auto';
 
-const ChartComponent = ({ type, data, options }) => {
-    const chartRef = useRef(null);
-    const chartInstanceRef = useRef(null);
+const ChartComponent = ({ type, data, options, width = '100%', height = '400px' }) => {
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
-    useEffect(() => {
-        const ctx = chartRef.current.getContext('2d');
+  useEffect(() => {
+    if (!chartRef.current) return;
 
-        if (chartInstanceRef.current) {
-            chartInstanceRef.current.destroy();
-          }
+    const ctx = chartRef.current.getContext('2d');
 
-          chartInstanceRef.current = new Chart(ctx, {
-            type,
-            data,
-            options,
-          });
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
 
-          return () => {
-            if (chartInstanceRef.current) {
-              chartInstanceRef.current.destroy();
-              chartInstanceRef.current = null;
-            }
-          };
+    try {
+      chartInstanceRef.current = new Chart(ctx, {
+        type,
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          ...options,
+        },
+      });
+    } catch (error) {
+      console.error('Error creating chart:', error);
+    }
 
-        }, [type, data, options]);
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [type, data, options]);
 
-                return <canvas ref={chartRef}></canvas>;
-        };
-        
-        export default ChartComponent;
+  return (
+    <canvas 
+      ref={chartRef}
+      style={{ width, height }}
+    />
+  );
+};
+
+    export default ChartComponent;
