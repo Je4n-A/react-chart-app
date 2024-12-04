@@ -45,4 +45,12 @@ const ChartComponent = ({ type, data, options, width = '100%', height = '400px' 
   );
 };
 
-    export default ChartComponent;
+ChartComponent.propTypes = {
+  type: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  options: PropTypes.object,
+  width: PropTypes.string,
+  height: PropTypes.string,
+};
+
+export default ChartComponent;
